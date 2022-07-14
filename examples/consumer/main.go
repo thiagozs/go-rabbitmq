@@ -20,6 +20,8 @@ func main() {
 		rmq.Exclusive(false),
 		rmq.NoLocal(false),
 		rmq.NoWait(false),
+		rmq.Mandatory(false),
+		rmq.Immediate(false),
 		rmq.Args(nil),
 		rmq.Name("hello"),
 	}
@@ -31,7 +33,7 @@ func main() {
 	queue, err := rbt.QueueDeclareWithOpts()
 	utils.FailOnError(err, "Failed to declare a queue")
 
-	msg, err := rbt.ConsumeWithOpts(queue)
+	msg, err := rbt.ConsumeWithOpts(queue.Name)
 	utils.FailOnError(err, "Failed to register a consumer")
 
 	quit := make(chan os.Signal, 1)
@@ -57,8 +59,10 @@ func main() {
 			queue, err = rbt.QueueDeclareWithOpts()
 			utils.FailOnError(err, "Failed to declare a queue")
 
-			msg, err = rbt.ConsumeWithOpts(queue)
+			msg, err = rbt.ConsumeWithOpts(queue.Name)
 			utils.FailOnError(err, "Failed to register a consumer")
+			log.Printf("Connection recovered")
+
 		}
 	}
 }

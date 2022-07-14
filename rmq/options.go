@@ -20,6 +20,8 @@ type Config struct {
 	NoWait     bool
 	NoLocal    bool
 	AutoAck    bool
+	Mandatory  bool
+	Immediate  bool
 	Args       amqp.Table
 }
 
@@ -124,5 +126,17 @@ func Key(key string) Options {
 func Heartbeat(heartbeat string) Options {
 	return func(o *Config) {
 		o.Heartbeat = heartbeat
+	}
+}
+
+func Mandatory(t bool) Options {
+	return func(o *Config) {
+		o.Mandatory = t
+	}
+}
+
+func Immediate(t bool) Options {
+	return func(o *Config) {
+		o.Immediate = t
 	}
 }

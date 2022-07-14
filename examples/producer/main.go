@@ -17,6 +17,8 @@ func main() {
 		rmq.Exclusive(false),
 		rmq.NoLocal(false),
 		rmq.NoWait(false),
+		rmq.Mandatory(false),
+		rmq.Immediate(false),
 		rmq.Args(nil),
 		rmq.Name("hello"),
 	}
@@ -31,7 +33,7 @@ func main() {
 	for i := 0; i < 10; i++ {
 		message := fmt.Sprintf("Hello World %d", i)
 		log.Printf("Send message: %s", message)
-		err = rbt.PublishWithOpts(queue, []byte(message))
+		err = rbt.PublishWithOpts(queue.Name, []byte(message))
 		utils.FailOnError(err, "Failed to publish a message")
 	}
 

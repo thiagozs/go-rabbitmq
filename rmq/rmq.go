@@ -132,15 +132,15 @@ func (r *RabbitMQ) ExchangeDelete(name string, ifUnused, noWait bool) error {
 	return r.Ch.ExchangeDelete(name, ifUnused, noWait)
 }
 
-func (r *RabbitMQ) PublishWithOpts(a amqp.Queue, body []byte) error {
-	return r.Ch.Publish(r.Cfg.Exchange, a.Name, false, false, amqp.Publishing{
+func (r *RabbitMQ) PublishWithOpts(name string, body []byte) error {
+	return r.Ch.Publish(r.Cfg.Exchange, name, r.Cfg.Mandatory, false, amqp.Publishing{
 		ContentType: "text/plain",
 		Body:        body,
 	})
 }
 
-func (r *RabbitMQ) ConsumeWithOpts(a amqp.Queue) (<-chan amqp.Delivery, error) {
-	return r.Ch.Consume(a.Name, r.Cfg.Consumer,
+func (r *RabbitMQ) ConsumeWithOpts(name string) (<-chan amqp.Delivery, error) {
+	return r.Ch.Consume(name, r.Cfg.Consumer,
 		r.Cfg.AutoAck, r.Cfg.Exclusive,
 		r.Cfg.NoLocal, r.Cfg.NoWait, r.Cfg.Args)
 }
