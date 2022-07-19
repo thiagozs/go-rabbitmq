@@ -14,7 +14,7 @@ import (
 func main() {
 
 	opts := []rmq.Options{
-		rmq.Url("amqp://guest:guest@localhost:5672"),
+		rmq.Url("amqp://root:secret@localhost:5672/dev"),
 		rmq.Durable(false),
 		rmq.AutoAck(true),
 		rmq.Exclusive(false),
@@ -24,16 +24,18 @@ func main() {
 		rmq.Immediate(false),
 		rmq.Args(nil),
 		rmq.Name("hello"),
+		rmq.Exchange("teste"),
+		rmq.Kind("fanout"),
 	}
 
 	rbt, err := rmq.NewService(opts...)
 	utils.FailOnError(err, "Failed to connect to RabbitMQ")
 	defer rbt.Close()
 
-	queue, err := rbt.QueueDeclareWithOpts()
+	_, err = rbt.QueueDeclareWithOpts()
 	utils.FailOnError(err, "Failed to declare a queue")
 
-	msg, err := rbt.ConsumeWithOpts(queue.Name)
+	msg, err := rbt.ConsumeWithOpts()
 	utils.FailOnError(err, "Failed to register a consumer")
 
 	quit := make(chan os.Signal, 1)
@@ -56,10 +58,10 @@ func main() {
 
 		case <-rbt.ConnectionDown():
 			log.Printf("Connection down")
-			queue, err = rbt.QueueDeclareWithOpts()
+			_, err = rbt.QueueDeclareWithOpts()
 			utils.FailOnError(err, "Failed to declare a queue")
 
-			msg, err = rbt.ConsumeWithOpts(queue.Name)
+			msg, err = rbt.ConsumeWithOpts()
 			utils.FailOnError(err, "Failed to register a consumer")
 			log.Printf("Connection recovered")
 

@@ -132,27 +132,37 @@ func (r *RabbitMQ) ExchangeDelete(name string, ifUnused, noWait bool) error {
 	return r.Ch.ExchangeDelete(name, ifUnused, noWait)
 }
 
-func (r *RabbitMQ) PublishWithOpts(name string, body []byte) error {
-	return r.Ch.Publish(r.Cfg.Exchange, name, r.Cfg.Mandatory, false, amqp.Publishing{
+func (r *RabbitMQ) PublishWithOpts(body []byte) error {
+	return r.Ch.Publish(r.Cfg.Exchange, r.Cfg.Key, r.Cfg.Mandatory, false, amqp.Publishing{
 		ContentType: "text/plain",
 		Body:        body,
 	})
 }
 
-func (r *RabbitMQ) ConsumeWithOpts(name string) (<-chan amqp.Delivery, error) {
-	return r.Ch.Consume(name, r.Cfg.Consumer,
+func (r *RabbitMQ) ConsumeWithOpts() (<-chan amqp.Delivery, error) {
+	return r.Ch.Consume(r.Cfg.Name, r.Cfg.Consumer,
 		r.Cfg.AutoAck, r.Cfg.Exclusive,
 		r.Cfg.NoLocal, r.Cfg.NoWait, r.Cfg.Args)
 }
 
 func (r *RabbitMQ) QueueDeclareWithOpts() (amqp.Queue, error) {
-	return r.Ch.QueueDeclare(r.Cfg.Name, r.Cfg.Durable,
+	q, err := r.Ch.QueueDeclare(r.Cfg.Name, r.Cfg.Durable,
 		r.Cfg.AutoDelete, r.Cfg.Exclusive,
 		r.Cfg.NoWait, r.Cfg.Args)
+	if err != nil {
+		return q, err
+	}
+
+	if err := r.QueueBind(q.Name, r.Cfg.Key, r.Cfg.Exchange,
+		r.Cfg.NoWait, r.Cfg.Args); err != nil {
+		return q, err
+	}
+
+	return q, nil
 }
 
 func (r *RabbitMQ) ExchangeDeclareWithOpts() error {
-	return r.Ch.ExchangeDeclare(r.Cfg.Name,
+	return r.Ch.ExchangeDeclare(r.Cfg.Exchange,
 		r.Cfg.Kind, r.Cfg.Durable,
 		r.Cfg.AutoDelete, r.Cfg.Internal,
 		r.Cfg.NoWait, r.Cfg.Args)
