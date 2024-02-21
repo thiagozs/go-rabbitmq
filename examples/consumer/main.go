@@ -54,6 +54,9 @@ func main() {
 			log.Printf("Received a message: %s", d.Body)
 		case <-quit:
 			log.Printf("Shutting down")
+			if err := rbt.Close(); err != nil {
+				log.Printf("Failed to close connection")
+			}
 			return
 
 		case <-rbt.MonitorConn():

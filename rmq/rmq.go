@@ -6,6 +6,7 @@
 package rmq
 
 import (
+	"fmt"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -118,8 +119,10 @@ func (r *RabbitMQ) Close() error {
 	select {
 	case r.quitM <- true:
 		// Sent successfully
+		fmt.Println("Close monitoring connection, receiver ready")
 	default:
 		// No receiver ready, proceed without blocking
+		fmt.Println("Close monitoring connection, no receiver")
 	}
 
 	return nil
