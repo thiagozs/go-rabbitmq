@@ -14,18 +14,18 @@ import (
 func main() {
 
 	opts := []rmq.Options{
-		rmq.Url("amqp://root:secret@localhost:5672/dev"),
-		rmq.Durable(false),
-		rmq.AutoAck(true),
-		rmq.Exclusive(false),
-		rmq.NoLocal(false),
-		rmq.NoWait(false),
-		rmq.Mandatory(false),
-		rmq.Immediate(false),
-		rmq.Args(nil),
-		rmq.Name("hello"),
-		rmq.Exchange("teste"),
-		rmq.Kind("fanout"),
+		rmq.WithUrl("amqp://guest:guest@localhost:5672/dev"),
+		rmq.WithDurable(false),
+		rmq.WithAutoAck(true),
+		rmq.WithExclusive(false),
+		rmq.WithNoLocal(false),
+		rmq.WithNoWait(false),
+		rmq.WithMandatory(false),
+		rmq.WithImmediate(false),
+		rmq.WithArgs(nil),
+		rmq.WithName("hello"),
+		rmq.WithExchange("teste"),
+		rmq.WithKind("fanout"),
 	}
 
 	rbt, err := rmq.NewService(opts...)
@@ -56,7 +56,7 @@ func main() {
 			log.Printf("Shutting down")
 			return
 
-		case <-rbt.ConnectionDown():
+		case <-rbt.MonitorConn():
 			log.Printf("Connection down")
 			_, err = rbt.QueueDeclareWithOpts()
 			utils.FailOnError(err, "Failed to declare a queue")
@@ -64,7 +64,6 @@ func main() {
 			msg, err = rbt.ConsumeWithOpts()
 			utils.FailOnError(err, "Failed to register a consumer")
 			log.Printf("Connection recovered")
-
 		}
 	}
 }

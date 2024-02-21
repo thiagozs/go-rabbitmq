@@ -3,20 +3,20 @@
 ## Connect to rabbitmq
 
 ```go
-	opts := []rmq.Options{
-		rmq.Url("amqp://guest:guest@localhost:5672"),
-		rmq.Durable(false),
-		rmq.AutoAck(true),
-		rmq.Exclusive(false),
-		rmq.NoLocal(false),
-		rmq.NoWait(false),
-		rmq.Args(nil),
-		rmq.Name("hello"),
-	}
+ opts := []rmq.Options{
+  rmq.Url("amqp://guest:guest@localhost:5672"),
+  rmq.Durable(false),
+  rmq.AutoAck(true),
+  rmq.Exclusive(false),
+  rmq.NoLocal(false),
+  rmq.NoWait(false),
+  rmq.Args(nil),
+  rmq.Name("hello"),
+}
 
-	rbt, err := rmq.NewService(opts...)
-	utils.FailOnError(err, "Failed to connect to RabbitMQ")
-	defer rbt.Close()
+  rbt, err := rmq.NewService(opts...)
+  utils.FailOnError(err, "Failed to connect to RabbitMQ")
+  defer rbt.Close()
 ```
 
 ## Create a Queue
@@ -34,6 +34,7 @@
 ```
 
 More examples can be found at [examples](examples/).
+
 ## Versioning and license
 
 We use SemVer for versioning. You can see the versions available by checking the tags on this repository.
