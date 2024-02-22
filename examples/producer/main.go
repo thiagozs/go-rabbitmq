@@ -20,8 +20,8 @@ func main() {
 		rmq.WithMandatory(false),
 		rmq.WithImmediate(false),
 		rmq.WithArgs(nil),
-		rmq.WithName("RoutingProcessed"),
-		rmq.WithExchange("ASAPExchange.Authorizer"),
+		rmq.WithName("teste"),
+		rmq.WithExchange("teste"),
 		rmq.WithKind("direct"),
 	}
 

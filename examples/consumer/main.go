@@ -23,10 +23,9 @@ func main() {
 		rmq.WithMandatory(false),
 		rmq.WithImmediate(false),
 		rmq.WithArgs(nil),
-		rmq.WithName("collector_transaction_queue"),
-		rmq.WithExchange("ASAPExchange.Authorizer"),
+		rmq.WithName("teste"),
+		rmq.WithExchange("teste"),
 		rmq.WithKind("direct"),
-		rmq.WithKey("RoutingProcessed"),
 	}
 
 	rbt, err := rmq.NewService(opts...)
