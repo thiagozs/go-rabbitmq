@@ -11,8 +11,8 @@ import (
 func main() {
 
 	opts := []rmq.Options{
-		rmq.WithUrl("amqp://guest:guest@localhost:5672/dev"),
-		rmq.WithDurable(false),
+		rmq.WithUrl("amqp://guest:guest@localhost:5672"),
+		rmq.WithDurable(true),
 		rmq.WithAutoAck(true),
 		rmq.WithExclusive(false),
 		rmq.WithNoLocal(false),
@@ -20,9 +20,9 @@ func main() {
 		rmq.WithMandatory(false),
 		rmq.WithImmediate(false),
 		rmq.WithArgs(nil),
-		rmq.WithName("hello"),
-		rmq.WithExchange("teste"),
-		rmq.WithKind("fanout"),
+		rmq.WithName("RoutingProcessed"),
+		rmq.WithExchange("ASAPExchange.Authorizer"),
+		rmq.WithKind("direct"),
 	}
 
 	rbt, err := rmq.NewService(opts...)
